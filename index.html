@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaaS Vacation Reservation Platform Survey</title>
+    <style>
+        :root {
+            --primary: #2a6cba;
+            --primary-light: #3d84dd;
+            --primary-dark: #1b4d8c;
+            --secondary: #f8f9fa;
+            --text: #212529;
+            --border: #ced4da;
+            --success: #28a745;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .intro {
+            margin-bottom: 30px;
+        }
+        
+        .survey-section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: var(--primary-dark);
+            margin-top: 20px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            background-color: var(--secondary);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-group,
+        .radio-group {
+            margin-top: 8px;
+        }
+        
+        .checkbox-group label,
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-group input,
+        .radio-group input {
+            margin-right: 10px;
+        }
+        
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            max-width: 500px;
+        }
+        
+        .likert-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .likert-label {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .slider-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .required:after {
+            content: " *";
+            color: red;
+        }
+        
+        .help-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .thank-you {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        /* Hide the detailed survey initially */
+        #detailedSurvey {
+            display: none;
+        }
+        
+        /* Success message */
+        .success-message {
+            text-align: center;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            display: none;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Error message */
+        .error-message {
+            display: none;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .likert-scale {
+                flex-wrap: wrap;
+            }
+            
+            .likert-item {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Powered Travel Agency Platform</h1>
+            <p>Revolutionize your travel agency operations with our innovative PaaS solution</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div id="initialSurvey">
+            <div class="intro">
+                <p>We're developing an innovative AI-powered PaaS vacation reservation platform specifically designed for travel agencies offering customized packages to Southeast Asia. We're looking for forward-thinking agencies to partner with for our MVP launch.</p>
+                <p>This brief survey will help us understand your interest and determine if your agency would be a good fit for our early partner program.</p>
+            </div>
+            
+            <form id="interestForm">
+                <div class="survey-section">
+                    <h2>Agency Profile</h2>
+                    
+                    <div class="question">
+                        <label for="agencyName" class="required">Agency name:</label>
+                        <input type="text" id="agencyName" name="agencyName" required>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="role" class="required">Your role:</label>
+                        <select id="role" name="role" required>
+                            <option value="">-- Select your role --</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Agent">Agent</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div id="otherRoleField" style="display: none; margin-top: 10px;">
+                            <label for="otherRole">Please specify:</label>
+                            <input type="text" id="otherRole" name="otherRole">
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="country" class="required">Country of operation:</label>
+                        <select id="country" name="country" required>
+                            <option value="">-- Select country --</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="UAE">United Arab Emirates</option>
+                            <option value="Qatar">Qatar</option>
+                            <option value="Oman">Oman</option>
+                            <option value="Bahrain">Bahrain</option>
+                            <option value="Kuwait">Kuwait</option>
+                            <option value="Jordan">Jordan</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div id="otherCountryField" style="display: none; margin-top: 10px;">
+                            <label for="otherCountry">Please specify:</label>
+                            <input type="text" id="otherCountry" name="otherCountry">
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="employees" class="required">Number of employees:</label>
+                        <select id="employees" name="employees" required>
+                            <option value="">-- Select range --</option>
+                            <option value="1-5">1-5</option>
+                            <option value="6-20">6-20</option>
+                            <option value="21-50">21-50</option>
+                            <option value="51-100">51-100</option>
+                            <option value="100+">More than 100</option>
+                        </select>
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">Primary destinations offered:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="destinations" value="Thailand"> Thailand</label>
+                            <label><input type="checkbox" name="destinations" value="Singapore"> Singapore</label>
+                            <label><input type="checkbox" name="destinations" value="Malaysia"> Malaysia</label>
+                            <label><input type="checkbox" name="destinations" value="Indonesia"> Indonesia</label>
+                            <label><input type="checkbox" name="destinations" value="Philippines"> Philippines</label>
+                            <label><input type="checkbox" name="destinations" value="Vietnam"> Vietnam</label>
+                            <label><input type="checkbox" id="otherDestination" value="Other"> Other</label>
+                        </div>
+                        <div id="otherDestinationField" style="display: none; margin-top: 10px;">
+                            <label for="otherDestinationText">Please specify:</label>
+                            <input type="text" id="otherDestinationText" name="otherDestinationText">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Current Operations</h2>
+                    
+                    <div class="question">
+                        <label class="required">How do you currently handle rate negotiation with service providers?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="rateNegotiation" value="Manual"> Manual emails/calls</label>
+                            <label><input type="checkbox" name="rateNegotiation" value="ThirdParty"> Third-party system</label>
+                            <label><input type="checkbox" name="rateNegotiation" value="DedicatedStaff"> Dedicated staff</label>
+                            <label><input type="checkbox" id="otherNegotiation" value="Other"> Other</label>
+                        </div>
+                        <div id="otherNegotiationField" style="display: none; margin-top: 10px;">
+                            <label for="otherNegotiationText">Please specify:</label>
+                            <input type="text" id="otherNegotiationText" name="otherNegotiationText">
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="negotiationHours" class="required">On average, how many hours per week does your team spend on rate negotiations?</label>
+                        <select id="negotiationHours" name="negotiationHours" required>
+                            <option value="">-- Select range --</option>
+                            <option value="0-5">0-5 hours</option>
+                            <option value="6-10">6-10 hours</option>
+                            <option value="11-20">11-20 hours</option>
+                            <option value="21-40">21-40 hours</option>
+                            <option value="40+">More than 40 hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">How do you currently customize vacation packages for clients?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="packageCustomization" value="Manual"> Manual process</label>
+                            <label><input type="checkbox" name="packageCustomization" value="Software"> Existing software solution</label>
+                            <label><input type="checkbox" name="packageCustomization" value="Predesigned"> Pre-designed packages only</label>
+                            <label><input type="checkbox" id="otherCustomization" value="Other"> Other</label>
+                        </div>
+                        <div id="otherCustomizationField" style="display: none; margin-top: 10px;">
+                            <label for="otherCustomizationText">Please specify:</label>
+                            <input type="text" id="otherCustomizationText" name="otherCustomizationText">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Interest Assessment</h2>
+                    
+                    <div class="question">
+                        <label class="required">Would an AI-powered system that automates rate negotiation with service providers interest you?</label>
+                        <div class="likert-scale">
+                            <div class="likert-item">
+                                <input type="radio" name="rateNegotiationInterest" value="1" id="rate1" required>
+                                <div class="likert-label">Not at all interested</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="rateNegotiationInterest" value="2" id="rate2">
+                                <div class="likert-label">Slightly interested</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="rateNegotiationInterest" value="3" id="rate3">
+                                <div class="likert-label">Moderately interested</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="rateNegotiationInterest" value="4" id="rate4">
+                                <div class="likert-label">Very interested</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="rateNegotiationInterest" value="5" id="rate5">
+                                <div class="likert-label">Extremely interested</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">Would a conversational AI assistant that helps create customized itineraries benefit your agency?</label>
+                        <div class="likert-scale">
+                            <div class="likert-item">
+                                <input type="radio" name="itineraryInterest" value="1" id="itinerary1" required>
+                                <div class="likert-label">Not at all beneficial</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="itineraryInterest" value="2" id="itinerary2">
+                                <div class="likert-label">Slightly beneficial</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="itineraryInterest" value="3" id="itinerary3">
+                                <div class="likert-label">Moderately beneficial</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="itineraryInterest" value="4" id="itinerary4">
+                                <div class="likert-label">Very beneficial</div>
+                            </div>
+                            <div class="likert-item">
+                                <input type="radio" name="itineraryInterest" value="5" id="itinerary5">
+                                <div class="likert-label">Extremely beneficial</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">What would be your biggest concern about adopting such a platform?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="concerns" value="Integration"> Integration with existing systems</label>
+                            <label><input type="checkbox" name="concerns" value="Cost"> Cost of implementation</label>
+                            <label><input type="checkbox" name="concerns" value="Training"> Staff training requirements</label>
+                            <label><input type="checkbox" name="concerns" value="Reliability"> Reliability of AI technology</label>
+                            <label><input type="checkbox" name="concerns" value="Security"> Data security/privacy</label>
+                            <label><input type="checkbox" id="otherConcern" value="Other"> Other</label>
+                        </div>
+                        <div id="otherConcernField" style="display: none; margin-top: 10px;">
+                            <label for="otherConcernText">Please specify:</label>
+                            <input type="text" id="otherConcernText" name="otherConcernText">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Next Steps</h2>
+                    
+                    <div class="question">
+                        <label class="required">Would you be interested in participating in our MVP program as an early partner?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="mvpInterest" value="Yes" id="mvpYes" required> Yes</label>
+                            <label><input type="radio" name="mvpInterest" value="No" id="mvpNo"> No</label>
+                        </div>
+                    </div>
+                    
+                    <div id="detailedSurveyInterest" style="display: none;">
+                        <div class="question">
+                            <label class="required">Would you be willing to complete a more detailed survey about your specific needs?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="detailedInterest" value="Yes" id="detailedYes"> Yes, I'm willing to complete a detailed survey</label>
+                                <label><input type="radio" name="detailedInterest" value="No" id="detailedNo"> No, just the basic survey for now</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="email" class="required">Contact email for follow-up:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="phone">Phone number (optional):</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                </div>
+                
+                <div id="spinnerInitial" class="spinner"></div>
+                <div id="errorMessageInitial" class="error-message">There was an error submitting your response. Please try again.</div>
+                
+                <div class="btn-group">
+                    <button type="submit" id="submitInterest">Submit</button>
+                </div>
+            </form>
+            
+            <div class="success-message" id="successMessage">
+                <h2>Thank you for your interest!</h2>
+                <p>We appreciate your time in completing this survey. Our team will review your responses and contact you soon regarding potential partnership opportunities.</p>
+                <p>Selected partners will receive preferential pricing, direct input into feature development, and dedicated support throughout the implementation process.</p>
+            </div>
+        </div>
+        
+        <!-- Detailed Survey - Hidden Initially -->
+        <div id="detailedSurvey">
+            <div class="intro">
+                <h2>Detailed Platform Assessment</h2>
+                <p>Thank you for your interest in our AI-powered vacation reservation platform. This follow-up survey will help us understand your specific needs and determine how our solution can best serve your agency.</p>
+            </div>
+            
+            <form id="detailedForm">
+                <div class="survey-section">
+                    <h2>Operational Details</h2>
+                    
+                    <div class="question">
+                        <label for="bookingPercentage" class="required">What percentage of your bookings are for Southeast Asian destinations?</label>
+                        <select id="bookingPercentage" name="bookingPercentage" required>
+                            <option value="">-- Select range --</option>
+                            <option value="<10%">Less than 10%</option>
+                            <option value="10-30%">10-30%</option>
+                            <option value="31-50%">31-50%</option>
+                            <option value="51-70%">51-70%</option>
+                            <option value=">70%">More than 70%</option>
+                        </select>
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">Which Southeast Asian destinations generate the highest volume for your agency? (Drag to rank)</label>
+                        <p class="help-text">Please rank from highest volume (top) to lowest volume</p>
+                        <ul id="destinationRanking" style="list-style-type: none; padding: 0;">
+                            <li data-value="Thailand" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Thailand</li>
+                            <li data-value="Singapore" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Singapore</li>
+                            <li data-value="Malaysia" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Malaysia</li>
+                            <li data-value="Indonesia" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Indonesia</li>
+                            <li data-value="Philippines" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Philippines</li>
+                            <li data-value="Vietnam" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Vietnam</li>
+                        </ul>
+                        <input type="hidden" id="destinationRankingResult" name="destinationRankingResult">
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">What is your typical customer profile?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="customerProfile" value="Luxury"> Luxury travelers</label>
+                            <label><input type="checkbox" name="customerProfile" value="Families"> Families</label>
+                            <label><input type="checkbox" name="customerProfile" value="Young"> Young professionals</label>
+                            <label><input type="checkbox" name="customerProfile" value="Retirees"> Retirees</label>
+                            <label><input type="checkbox" name="customerProfile" value="Adventure"> Adventure seekers</label>
+                            <label><input type="checkbox" name="customerProfile" value="Cultural"> Cultural tourists</label>
+                            <label><input type="checkbox" id="otherProfile" value="Other"> Other</label>
+                        </div>
+                        <div id="otherProfileField" style="display: none; margin-top: 10px;">
+                            <label for="otherProfileText">Please specify:</label>
+                            <input type="text" id="otherProfileText" name="otherProfileText">
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="packageValue" class="required">Average package value:</label>
+                        <select id="packageValue" name="packageValue" required>
+                            <option value="">-- Select range --</option>
+                            <option value="<$1,000">Less than $1,000</option>
+                            <option value="$1,000-$2,500">$1,000-$2,500</option>
+                            <option value="$2,501-$5,000">$2,501-$5,000</option>
+                            <option value="$5,001-$10,000">$5,001-$10,000</option>
+                            <option value=">$10,000">More than $10,000</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Current Challenges</h2>
+                    
+                    <div class="question">
+                        <label>Rate the following challenges based on impact to your business:</label>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left; padding: 10px 5px;">Challenge</th>
+                                    <th style="text-align: center; padding: 5px;">Low Impact</th>
+                                    <th style="text-align: center; padding: 5px;"></th>
+                                    <th style="text-align: center; padding: 5px;"></th>
+                                    <th style="text-align: center; padding: 5px;"></th>
+                                    <th style="text-align: center; padding: 5px;">High Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Time-consuming rate negotiations</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_rates" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_rates" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_rates" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_rates" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_rates" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Difficulty creating personalized itineraries quickly</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_itineraries" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_itineraries" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_itineraries" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_itineraries" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_itineraries" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Limited access to real-time inventory</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_inventory" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_inventory" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_inventory" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_inventory" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_inventory" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Integration between different systems</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_integration" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_integration" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_integration" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_integration" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_integration" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Managing customer communications</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_communications" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_communications" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_communications" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_communications" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_communications" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Documentation and voucher generation</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_documentation" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_documentation" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_documentation" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_documentation" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_documentation" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 5px;">Payment processing complexities</td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_payments" value="1" required></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_payments" value="2"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_payments" value="3"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_payments" value="4"></td>
+                                    <td style="text-align: center;"><input type="radio" name="challenge_payments" value="5"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="biggestPainPoint" class="required">What's your biggest pain point in creating custom vacation packages?</label>
+                        <textarea id="biggestPainPoint" name="biggestPainPoint" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="iterationCount" class="required">How many iterations of an itinerary do you typically go through before customer approval?</label>
+                        <select id="iterationCount" name="iterationCount" required>
+                            <option value="">-- Select range --</option>
+                            <option value="1-2">1-2 iterations</option>
+                            <option value="3-5">3-5 iterations</option>
+                            <option value="6-10">6-10 iterations</option>
+                            <option value="10+">More than 10 iterations</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Technical Environment</h2>
+                    
+                    <div class="question">
+                        <label for="currentSystems" class="required">What reservation/booking systems do you currently use?</label>
+                        <textarea id="currentSystems" name="currentSystems" rows="2" required></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <label>Do you use any GDS systems? If yes, which ones?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="gdsSystems" value="Amadeus"> Amadeus</label>
+                            <label><input type="checkbox" name="gdsSystems" value="Sabre"> Sabre</label>
+                            <label><input type="checkbox" name="gdsSystems" value="Travelport"> Travelport</label>
+                            <label><input type="checkbox" id="otherGds" value="Other"> Other</label>
+                            <label><input type="checkbox" name="gdsSystems" value="None"> None</label>
+                        </div>
+                        <div id="otherGdsField" style="display: none; margin-top: 10px;">
+                            <label for="otherGdsText">Please specify:</label>
+                            <input type="text" id="otherGdsText" name="otherGdsText">
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="paymentGateways">What payment gateways do you currently work with?</label>
+                        <textarea id="paymentGateways" name="paymentGateways" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="contentManagement" class="required">How do you currently manage content (images, descriptions) for destinations and properties?</label>
+                        <textarea id="contentManagement" name="contentManagement" rows="2" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Platform Requirements</h2>
+                    
+                    <div class="question">
+                        <label>Which features would be most valuable to your agency? (Drag to rank)</label>
+                        <p class="help-text">Please rank from most valuable (top) to least valuable</p>
+                        <ul id="featureRanking" style="list-style-type: none; padding: 0;">
+                            <li data-value="AI-powered rate negotiation" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">AI-powered rate negotiation</li>
+                            <li data-value="Conversational itinerary builder" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Conversational itinerary builder</li>
+                            <li data-value="Integration with wholesale inventory" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Integration with wholesale inventory providers</li>
+                            <li data-value="White-labeling capabilities" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">White-labeling capabilities</li>
+                            <li data-value="Mobile-responsive interface" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Mobile-responsive interface</li>
+                            <li data-value="Multi-language support" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Multi-language support</li>
+                            <li data-value="Analytics and reporting" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Analytics and reporting</li>
+                            <li data-value="Automated documentation" style="padding: 10px; background-color: #f8f9fa; margin-bottom: 5px; border: 1px solid #ced4da; cursor: move;">Automated documentation generation</li>
+                        </ul>
+                        <input type="hidden" id="featureRankingResult" name="featureRankingResult">
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">What level of human oversight would you prefer for AI negotiations?</label>
+                        <input type="range" min="1" max="5" value="3" class="slider-container" id="aiOversight" name="aiOversight" required>
+                        <div class="slider-labels">
+                            <span>Full automation</span>
+                            <span>Equal balance</span>
+                            <span>Human approval for all steps</span>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label class="required">Would you prefer a platform that:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="platformPreference" value="Replace" required> Fully replaces your current systems</label>
+                            <label><input type="radio" name="platformPreference" value="Integrate"> Integrates with your existing systems</label>
+                            <label><input type="radio" name="platformPreference" value="Alongside"> Operates alongside existing systems</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="roiTimeline" class="required">What would be your expected ROI timeline for implementing such a platform?</label>
+                        <select id="roiTimeline" name="roiTimeline" required>
+                            <option value="">-- Select timeline --</option>
+                            <option value="<6 months">Less than 6 months</option>
+                            <option value="6-12 months">6-12 months</option>
+                            <option value="1-2 years">1-2 years</option>
+                            <option value="2+ years">More than 2 years</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>MVP Partnership</h2>
+                    
+                    <div class="question">
+                        <label>What resources could you commit to an MVP partnership?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="mvpResources" value="Staff"> Staff time for testing and feedback</label>
+                            <label><input type="checkbox" name="mvpResources" value="Data"> Access to anonymized historical booking data</label>
+                            <label><input type="checkbox" name="mvpResources" value="Feedback"> Regular feedback sessions</label>
+                            <label><input type="checkbox" name="mvpResources" value="Integration"> Integration testing</label>
+                            <label><input type="checkbox" id="otherResource" value="Other"> Other</label>
+                        </div>
+                        <div id="otherResourceField" style="display: none; margin-top: 10px;">
+                            <label for="otherResourceText">Please specify:</label>
+                            <input type="text" id="otherResourceText" name="otherResourceText">
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="implementationTimeline" class="required">Preferred timeline for implementation:</label>
+                        <select id="implementationTimeline" name="implementationTimeline" required>
+                            <option value="">-- Select timeline --</option>
+                            <option value="Immediately">Immediately</option>
+                            <option value="Within 3 months">Within 3 months</option>
+                            <option value="3-6 months">3-6 months</option>
+                            <option value="6-12 months">6-12 months</option>
+                        </select>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="successMetrics" class="required">What specific metrics would you use to measure the success of the platform?</label>
+                        <textarea id="successMetrics" name="successMetrics" rows="3" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="survey-section">
+                    <h2>Additional Information</h2>
+                    
+                    <div class="question">
+                        <label for="additionalNeeds">What other information should we know about your agency's needs?</label>
+                        <textarea id="additionalNeeds" name="additionalNeeds" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <label for="concerns">Any specific concerns about the platform we should address?</label>
+                        <textarea id="concerns" name="concerns" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div id="spinnerDetailed" class="spinner"></div>
+                <div id="errorMessageDetailed" class="error-message">There was an error submitting your response. Please try again.</div>
+                
+                <div class="btn-group">
+                    <button type="button" id="backToInitial">Back</button>
+                    <button type="submit" id="submitDetailed">Submit</button>
+                </div>
+            </form>
+            
+            <div class="success-message" id="detailedSuccessMessage">
+                <h2>Thank you for completing the detailed assessment!</h2>
+                <p>We appreciate your thorough feedback on your agency's needs and preferences. Our team will review your responses and contact you soon to discuss potential partnership opportunities for our MVP launch.</p>
+                <p>Selected partners will receive preferential pricing, direct input into feature development, and dedicated support throughout the implementation process.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize the form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show/hide "Other" fields
+            document.getElementById('role').addEventListener('change', function() {
+                document.getElementById('otherRoleField').style.display = this.value === 'Other' ? 'block' : 'none';
+            });
+            
+            document.getElementById('country').addEventListener('change', function() {
+                document.getElementById('otherCountryField').style.display = this.value === 'Other' ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherDestination').addEventListener('change', function() {
+                document.getElementById('otherDestinationField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherNegotiation').addEventListener('change', function() {
+                document.getElementById('otherNegotiationField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherCustomization').addEventListener('change', function() {
+                document.getElementById('otherCustomizationField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherConcern').addEventListener('change', function() {
+                document.getElementById('otherConcernField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherProfile').addEventListener('change', function() {
+                document.getElementById('otherProfileField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherGds').addEventListener('change', function() {
+                document.getElementById('otherGdsField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            document.getElementById('otherResource').addEventListener('change', function() {
+                document.getElementById('otherResourceField').style.display = this.checked ? 'block' : 'none';
+            });
+            
+            // Show/hide MVP interest follow-up
+            const mvpYes = document.getElementById('mvpYes');
+            const mvpNo = document.getElementById('mvpNo');
+            const detailedSurveyInterest = document.getElementById('detailedSurveyInterest');
+            
+            mvpYes.addEventListener('change', function() {
+                detailedSurveyInterest.style.display = this.checked ? 'block' : 'none';
+            });
+            
+            mvpNo.addEventListener('change', function() {
+                detailedSurveyInterest.style.display = 'none';
+            });
+            
+            // Form submission handling for Initial Survey
+            document.getElementById('interestForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show spinner, hide error message
+                document.getElementById('spinnerInitial').style.display = 'block';
+                document.getElementById('errorMessageInitial').style.display = 'none';
+                
+                // Collect form data
+                const formData = new FormData(this);
+                const formObject = {};
+                
+                formData.forEach((value, key) => {
+                    // Handle checkboxes (multiple values)
+                    if (formObject[key]) {
+                        if (!Array.isArray(formObject[key])) {
+                            formObject[key] = [formObject[key]];
+                        }
+                        formObject[key].push(value);
+                    } else {
+                        formObject[key] = value;
+                    }
+                });
+                
+                // Add form type identifier
+                formObject.formType = 'initial';
+                
+                // Handle "other" fields
+                if (formObject.role === 'Other' && formObject.otherRole) {
+                    formObject.roleSpecified = formObject.otherRole;
+                }
+                
+                if (formObject.country === 'Other' && formObject.otherCountry) {
+                    formObject.countrySpecified = formObject.otherCountry;
+                }
+                
+                // Get destinations as array
+                const destinationsCheckboxes = document.querySelectorAll('input[name="destinations"]:checked');
+                formObject.destinations = Array.from(destinationsCheckboxes).map(cb => cb.value);
+                
+                if (formObject.destinations.includes('Other') && document.getElementById('otherDestinationText').value) {
+                    formObject.destinationsSpecified = document.getElementById('otherDestinationText').value;
+                }
+                
+                // Get rate negotiation methods as array
+                const rateNegotiationCheckboxes = document.querySelectorAll('input[name="rateNegotiation"]:checked');
+                formObject.rateNegotiation = Array.from(rateNegotiationCheckboxes).map(cb => cb.value);
+                
+                if (formObject.rateNegotiation.includes('Other') && document.getElementById('otherNegotiationText').value) {
+                    formObject.rateNegotiationSpecified = document.getElementById('otherNegotiationText').value;
+                }
+                
+                // Get package customization methods as array
+                const packageCustomizationCheckboxes = document.querySelectorAll('input[name="packageCustomization"]:checked');
+                formObject.packageCustomization = Array.from(packageCustomizationCheckboxes).map(cb => cb.value);
+                
+                if (formObject.packageCustomization.includes('Other') && document.getElementById('otherCustomizationText').value) {
+                    formObject.packageCustomizationSpecified = document.getElementById('otherCustomizationText').value;
+                }
+                
+                // Get concerns as array
+                const concernsCheckboxes = document.querySelectorAll('input[name="concerns"]:checked');
+                formObject.concerns = Array.from(concernsCheckboxes).map(cb => cb.value);
+                
+                if (formObject.concerns.includes('Other') && document.getElementById('otherConcernText').value) {
+                    formObject.concernsSpecified = document.getElementById('otherConcernText').value;
+                }
+                
+                // Timestamp
+                formObject.submissionTime = new Date().toISOString();
+                
+                // Send to Google Apps Script Web App
+                fetch('1AZxq0kPDTcsPXLzADb3Zb4Ip4NFKqx_cJCIm0D4Q15Q', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Hide spinner
+                    document.getElementById('spinnerInitial').style.display = 'none';
+                    
+                    // Check if user wants to proceed to detailed survey
+                    const mvpInterested = document.querySelector('input[name="mvpInterest"]:checked').value === 'Yes';
+                    const detailedInterested = document.querySelector('input[name="detailedInterest"]:checked')?.value === 'Yes';
+                    
+                    if (mvpInterested && detailedInterested) {
+                        // Show detailed survey
+                        document.getElementById('initialSurvey').style.display = 'none';
+                        document.getElementById('detailedSurvey').style.display = 'block';
+                        document.getElementById('progressBar').style.width = '50%';
+                        window.scrollTo(0, 0);
+                    } else {
+                        // Show success message
+                        document.getElementById('interestForm').style.display = 'none';
+                        document.getElementById('successMessage').style.display = 'block';
+                        window.scrollTo(0, 0);
+                    }
+                })
+                .catch(error => {
+                    // Hide spinner, show error
+                    document.getElementById('spinnerInitial').style.display = 'none';
+                    document.getElementById('errorMessageInitial').style.display = 'block';
+                    console.error('Error:', error);
+                });
+            });
+            
+            // Back button functionality
+            document.getElementById('backToInitial').addEventListener('click', function() {
+                document.getElementById('initialSurvey').style.display = 'block';
+                document.getElementById('detailedSurvey').style.display = 'none';
+                document.getElementById('progressBar').style.width = '25%';
+                window.scrollTo(0, 0);
+            });
+            
+            // Detailed form submission
+            document.getElementById('detailedForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show spinner, hide error message
+                document.getElementById('spinnerDetailed').style.display = 'block';
+                document.getElementById('errorMessageDetailed').style.display = 'none';
+                
+                // Collect form data
+                const formData = new FormData(this);
+                const formObject = {};
+                
+                formData.forEach((value, key) => {
+                    // Handle checkboxes (multiple values)
+                    if (formObject[key]) {
+                        if (!Array.isArray(formObject[key])) {
+                            formObject[key] = [formObject[key]];
+                        }
+                        formObject[key].push(value);
+                    } else {
+                        formObject[key] = value;
+                    }
+                });
+                
+                // Add form type identifier
+                formObject.formType = 'detailed';
+                
+                // Get destination ranking
+                const destinationRanking = Array.from(document.getElementById('destinationRanking').children)
+                    .map(item => item.getAttribute('data-value'));
+                formObject.destinationRanking = destinationRanking;
+                
+                // Get feature ranking
+                const featureRanking = Array.from(document.getElementById('featureRanking').children)
+                    .map(item => item.getAttribute('data-value'));
+                formObject.featureRanking = featureRanking;
+                
+                // Get customer profile as array
+                const customerProfileCheckboxes = document.querySelectorAll('input[name="customerProfile"]:checked');
+                formObject.customerProfile = Array.from(customerProfileCheckboxes).map(cb => cb.value);
+                
+                if (formObject.customerProfile.includes('Other') && document.getElementById('otherProfileText').value) {
+                    formObject.customerProfileSpecified = document.getElementById('otherProfileText').value;
+                }
+                
+                // Get GDS systems as array
+                const gdsCheckboxes = document.querySelectorAll('input[name="gdsSystems"]:checked');
+                formObject.gdsSystems = Array.from(gdsCheckboxes).map(cb => cb.value);
+                
+                if (formObject.gdsSystems.includes('Other') && document.getElementById('otherGdsText').value) {
+                    formObject.gdsSystemsSpecified = document.getElementById('otherGdsText').value;
+                }
+                
+                // Get MVP resources as array
+                const mvpResourcesCheckboxes = document.querySelectorAll('input[name="mvpResources"]:checked');
+                formObject.mvpResources = Array.from(mvpResourcesCheckboxes).map(cb => cb.value);
+                
+                if (formObject.mvpResources.includes('Other') && document.getElementById('otherResourceText').value) {
+                    formObject.mvpResourcesSpecified = document.getElementById('otherResourceText').value;
+                }
+                
+                // Link to initial survey response using email
+                const initialEmail = document.getElementById('email').value;
+                formObject.email = initialEmail;
+                
+                // Timestamp
+                formObject.submissionTime = new Date().toISOString();
+                
+                // Send to Google Apps Script Web App
+                fetch('1AZxq0kPDTcsPXLzADb3Zb4Ip4NFKqx_cJCIm0D4Q15Q', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Hide spinner
+                    document.getElementById('spinnerDetailed').style.display = 'none';
+                    
+                    // Show success message
+                    document.getElementById('detailedForm').style.display = 'none';
+                    document.getElementById('detailedSuccessMessage').style.display = 'block';
+                    document.getElementById('progressBar').style.width = '100%';
+                    window.scrollTo(0, 0);
+                })
+                .catch(error => {
+                    // Hide spinner, show error
+                    document.getElementById('spinnerDetailed').style.display = 'none';
+                    document.getElementById('errorMessageDetailed').style.display = 'block';
+                    console.error('Error:', error);
+                });
+            });
+            
+            // Basic drag and drop functionality for ranking lists
+            function enableDragSort(listId) {
+                const list = document.getElementById(listId);
+                let draggedItem = null;
+                
+                for (let i = 0; i < list.children.length; i++) {
+                    const item = list.children[i];
+                    
+                    item.draggable = true;
+                    
+                    item.addEventListener('dragstart', function() {
+                        draggedItem = item;
+                        setTimeout(function() {
+                            item.style.display = 'none';
+                        }, 0);
+                    });
+                    
+                    item.addEventListener('dragend', function() {
+                        setTimeout(function() {
+                            draggedItem.style.display = 'block';
+                            draggedItem = null;
+                        }, 0);
+                    });
+                    
+                    item.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                    });
+                    
+                    item.addEventListener('dragenter', function(e) {
+                        e.preventDefault();
+                        this.style.backgroundColor = '#e9ecef';
+                    });
+                    
+                    item.addEventListener('dragleave', function() {
+                        this.style.backgroundColor = '#f8f9fa';
+                    });
+                    
+                    item.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        this.style.backgroundColor = '#f8f9fa';
+                        if (draggedItem !== this) {
+                            if (this.parentNode === draggedItem.parentNode) {
+                                let children = Array.from(this.parentNode.children);
+                                let draggedPos = children.indexOf(draggedItem);
+                                let thisPos = children.indexOf(this);
+                                
+                                if (draggedPos < thisPos) {
+                                    this.parentNode.insertBefore(draggedItem, this.nextSibling);
+                                } else {
+                                    this.parentNode.insertBefore(draggedItem, this);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            // Enable drag and drop for ranking lists
+            enableDragSort('destinationRanking');
+            enableDragSort('featureRanking');
+            
+            // Set initial progress
+            document.getElementById('progressBar').style.width = '25%';
+        });
+    </script>
+</body>
+</html>
